@@ -1,0 +1,17 @@
+{
+  "name": "xml-parser",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run parse.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
