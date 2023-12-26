@@ -13,7 +13,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "jsdom": "^23.0.1",
     "zod": "^3.22.4"
   }
 }

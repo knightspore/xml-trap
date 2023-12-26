@@ -1,34 +1,58 @@
-import { isClosingTag, isNewLine, isNotEmpty, isOpeningTag, isTab, isText, isWhiteSpace } from "./match";
+import { isCharClosingTag, isCharNewLine, isNotEmpty, isCharOpeningTag, isCharTab, isCharText, isCharWhitespace } from "./match";
 
-export function tokenizer(xml: string): string[] {
-    const source: string = xml.trim();
-    const tokens: string[] = [];
-    let cursor: number = 0;
-    do {
-        let char = source[cursor];
-        if (isWhiteSpace(char) || isNewLine(char) || isTab(char)) {
-            cursor++;
-            continue;
-        }
-        let token = "";
-        if (isOpeningTag(char)) {
-            do {
-                char = source[cursor];
-                token += char;
-                cursor++;
-            } while (isNotEmpty(source, cursor) && !isClosingTag(char))
-        } else if (isText(char)) {
-            do {
-                char = source[cursor];
-                if (isOpeningTag(char)) break;
-                token += char;
-                cursor++;
-            } while (isNotEmpty(source, cursor) && isText(char) && !isOpeningTag(char))
-        }
-        if (token.length > 0) {
-            tokens.push(token);
-        }
-    } while (isNotEmpty(source, cursor))
+type TokenizerState = {
+    source: string,
+    tokens: string[],
+    cursor: number,
+    token: string,
+}
 
+function trimLeft(source: string, cursor: number): number {
+    let char = source[cursor];
+    if (isCharWhitespace(char) || isCharNewLine(char) || isCharTab(char)) {
+        cursor++;
+        return trimLeft(source, cursor);
+    }
+    return cursor;
+}
+
+function chopChar(source: string, cursor: number): [string, number] {
+    let char = source[cursor];
+    cursor++;
+    return [char, cursor];
+}
+
+function nextToken(source: string, cursor: number): [string, number] {
+    cursor = trimLeft(source, cursor);
+
+    let char = source[cursor];
+    let token = "";
+
+    if (isCharOpeningTag(source[cursor])) {
+        while (isNotEmpty(source, cursor) && !isCharClosingTag(char)) {
+            [char, cursor] = chopChar(source, cursor);
+            token += char;
+        }
+    } else if (isCharText(source[cursor])) {
+        while (isNotEmpty(source, cursor) && isCharText(char) && !isCharOpeningTag(source[cursor])) {
+            [char, cursor] = chopChar(source, cursor);
+            token += char;
+        }
+    }
+
+    return [token, cursor];
+}
+
+export function createTokensFromString(xml: string): string[] {
+    let { source, tokens, cursor, token }: TokenizerState = {
+        source: xml.trim(),
+        tokens: [],
+        cursor: 0,
+        token: "",
+    }
+    while (isNotEmpty(source, cursor)) {
+        [token, cursor] = nextToken(source, cursor);
+        tokens.push(token);
+    }
     return tokens;
 }

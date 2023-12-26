@@ -1,5 +1,5 @@
-import { RSSSample, XMLSample } from "./constants";
-import { parse } from "./parse";
+import { z } from "zod";
+import { createTree } from "./ast";
 
-const sample = await XMLSample();
-parse(sample);
+const tree = createTree(await Bun.file("./samples/rss.xml").text());
+console.log(JSON.stringify(tree, null, 2))

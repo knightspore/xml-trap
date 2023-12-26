@@ -6,28 +6,28 @@ export function match(pattern: RegExp, val: string): boolean {
     return pattern.test(val);
 }
 
-export function isWhiteSpace(char: string): boolean {
+export function isCharWhitespace(char: string): boolean {
     return match(/\s/, char);
 }
 
-export function isNewLine(char: string): boolean {
+export function isCharNewLine(char: string): boolean {
     return match(/\n/, char);
 }
 
-export function isTab(char: string): boolean {
+export function isCharTab(char: string): boolean {
     return match(/\t/, char);
 }
 
-export function isOpeningTag(char: string): boolean {
+export function isCharOpeningTag(char: string): boolean {
     return match(/</, char);
 }
 
-export function isClosingTag(char: string): boolean {
+export function isCharClosingTag(char: string): boolean {
     return match(/>/, char);
 }
 
-export function isText(char: string): boolean {
-    return !isOpeningTag(char) && !isClosingTag(char);
+export function isCharText(char: string): boolean {
+    return !isCharOpeningTag(char) && !isCharClosingTag(char);
 }
 
 export function isOpeningXMLTag(value: string) {
@@ -40,6 +40,14 @@ export function isClosingXMLTag(value: string) {
 
 export function isSelfClosingXMLTag(value: string) {
     return match(/<[^\s<>\/]+(?:\s[^<>]+)?\/>/, value);
+}
+
+export function isCDATAOpeningTag(value: string) {
+    return match(/<!\[CDATA\[/, value);
+}
+
+export function isCDATAClosingTag(value: string) {
+    return match(/\]\]>/, value);
 }
 
 export function isDeclaration(value: string) {

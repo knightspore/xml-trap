@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isClosingTag, isClosingXMLTag, isOpeningTag, isOpeningXMLTag, isSelfClosingXMLTag, match } from "./match"
+import { isClosingXMLTag, isOpeningXMLTag, isSelfClosingXMLTag, isCDATAOpeningTag, isCDATAClosingTag, isDeclaration } from "./match"
 
 type BaseXMLNode = z.infer<typeof BaseXMLNodeSchema>;
 export const BaseXMLNodeSchema = z.object({
@@ -18,6 +18,7 @@ export const XMLNodeSchema: z.ZodType<Children> = BaseXMLNodeSchema.extend({
     children: z.lazy(() => XMLNodeSchema.array()),
 })
 
+export type XMLDocument = z.infer<typeof XMLDocumentSchema>;
 export const XMLDocumentSchema = z.object({
     declaration: XMLNodeSchema,
     root: XMLNodeSchema
@@ -25,31 +26,30 @@ export const XMLDocumentSchema = z.object({
 
 export enum NodeType {
     Declaration = "declaration",
-    ElementOpenTag = "elementOpenTag",
-    ElementCloseTag = "elementCloseTag",
-    ElementSelfClosingTag = "elementSelfClosingTag",
+    ElementOpenTag = "open",
+    ElementCloseTag = "close",
+    ElementSelfClosingTag = "selfclose",
+    ElementCDATAOpenTag = "cdataopen",
+    ElementCDATACloseTag = "cdataclose",
     Text = "text",
 }
 
 function getType(value: string): NodeType {
     switch (true) {
-        case value.startsWith("<?xml"):
+        case isDeclaration(value):
             return NodeType.Declaration
+        case isSelfClosingXMLTag(value):
+            return NodeType.ElementSelfClosingTag;
+        case isCDATAOpeningTag(value):
+            return NodeType.ElementCDATAOpenTag;
+        case isCDATAClosingTag(value):
+            return NodeType.ElementCDATACloseTag;
+        case isOpeningXMLTag(value):
+            return NodeType.ElementOpenTag;
+        case isClosingXMLTag(value):
+            return NodeType.ElementCloseTag;
         default:
-            if (isOpeningTag(value[0]) || isClosingTag(value[value.length - 1])) {
-                switch (true) {
-                    case isSelfClosingXMLTag(value):
-                        return NodeType.ElementSelfClosingTag;
-                    case isOpeningXMLTag(value):
-                        return NodeType.ElementOpenTag;
-                    case isClosingXMLTag(value):
-                        return NodeType.ElementCloseTag;
-                    default:
-                        throw new Error("Unknown node type")
-                }
-            } else {
-                return NodeType.Text
-            }
+            return NodeType.Text
     }
 }
 
@@ -64,28 +64,53 @@ export function getAttributes(value: string): Record<string, string> {
     return attributes;
 }
 
-export function getNameOrText(value: string): string {
+export function getName(value: string): string {
     const nameMatcher = /<([^\s>]+)/g;
     let returnValue = null;;
     const match = nameMatcher.exec(value)
     try {
-        returnValue = match![1].replace("?", "").replace("/", "");
+        returnValue = match![1].replace("/", "");
     } catch (e: any) {
         returnValue = value;
     }
     return returnValue;
 }
 
+export function getCDATAValue(value: string): string {
+    if (!value.endsWith("]]>")) {
+        value += "]]>";
+    }
+    const cdataMatcher = /<!\[CDATA\[([\s\S]+)\]\]>/g;
+    const match = cdataMatcher.exec(value);
+    return match![1];
+}
+
 export function createXMLNode(value: string): XMLNode {
-    value = value.trim();
-    const nameOrValue = getNameOrText(value);
     const type = getType(value);
-    const attributes = getAttributes(value);
+    let name = "";
+    value = value.trim();
+    switch (type) {
+        case NodeType.ElementCDATAOpenTag:
+            name = "CDATA";
+            value = getCDATAValue(value);
+            break;
+        case NodeType.Text:
+            name = "innerText";
+            break;
+        default:
+            name = getName(value);
+            break;
+
+    }
     return XMLNodeSchema.parse({
-        name: nameOrValue === value ? "child" : nameOrValue,
+        name,
         type,
         value,
-        attributes,
+        attributes: getAttributes(value),
         children: [],
     })
+}
+
+export function createXMLNodesFromTokens(tokens: string[]): XMLNode[] {
+    return XMLNodeSchema.array().parse(tokens.map(createXMLNode))
 }
