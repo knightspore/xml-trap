@@ -1,156 +1,78 @@
 import { z } from "zod";
-import { XMLDocumentSchema, XMLNode, XMLNodeSchema } from "./types";
-import { isClosingTag, isClosingXMLTag, isOpeningTag, isOpeningXMLTag, isSelfClosingXMLTag, match } from "./match"
+import { NodeType, XMLDocumentSchema, XMLNode, createXMLNode } from "./xml";
 import { tokenizer } from "./tokenizer";
 
-export function getAttributes(value: string): Record<string, string> {
-    const attributes: Record<string, string> = {};
-    const attrMatcher = /([^\s]+)="([^"]+)"/g;
-    let match: RegExpExecArray | null;
-    while ((match = attrMatcher.exec(value)) != null) {
-        const [_, key, val] = match;
-        attributes[key] = val;
+function parseChildren(nodes: XMLNode[], debug: boolean = false): XMLNode[] {
+    const tree: XMLNode[] = [];
+    let stack: XMLNode[] = [];
+
+    function pushToLowestChild(heap: XMLNode[], node: XMLNode) {
+        let last = heap[heap.length - 1]
+        if (last.children.length > 0 && last.type === NodeType.ElementOpenTag) {
+            pushToLowestChild(last.children, node);
+        } else {
+            last.children.push(node);
+        }
     }
-    return attributes;
-}
 
-export enum NodeType {
-    Declaration = "declaration",
-    ElementOpenTag = "elementOpenTag",
-    ElementCloseTag = "elementCloseTag",
-    ElementSelfClosingTag = "elementSelfClosingTag",
-    Text = "text",
-}
-
-function getNameOrText(value: string): string {
-    const nameMatcher = /<([^\s>]+)/g;
-    let returnValue = null;;
-    const match = nameMatcher.exec(value)
-    try {
-        returnValue = match![1].replace("?", "").replace("/", "");
-    } catch (e: any) {
-        returnValue = value;
-    }
-    return returnValue;
-}
-
-function getType(value: string): NodeType {
-    switch (true) {
-        case value.startsWith("<?xml"):
-            return NodeType.Declaration
-        default:
-            if (isOpeningTag(value[0]) || isClosingTag(value[value.length - 1])) {
-                switch (true) {
-                    case isSelfClosingXMLTag(value):
-                        return NodeType.ElementSelfClosingTag;
-                    case isOpeningXMLTag(value):
-                        return NodeType.ElementOpenTag;
-                    case isClosingXMLTag(value):
-                        return NodeType.ElementCloseTag;
-                    default:
-                        throw new Error("Unknown node type")
+    for (const node of nodes) {
+        switch (node.type) {
+            case NodeType.Text:
+            case NodeType.ElementOpenTag:
+                if (stack.length > 0) {
+                    pushToLowestChild(stack, node)
+                } else {
+                    stack.push(node);
                 }
-            } else {
-                return NodeType.Text
-            }
-    }
-}
-
-export function createXMLNode(value: string): XMLNode {
-    value = value.trim();
-    const nameOrValue = getNameOrText(value);
-    const type = getType(value);
-    const attributes = getAttributes(value);
-    return XMLNodeSchema.parse({
-        name: nameOrValue === value ? "child" : nameOrValue,
-        type,
-        value,
-        attributes,
-        children: [],
-    })
-}
-
-
-function parseDeclaration(tokens: string[]): [XMLNode, string[]] {
-    const declarationToken: string = tokens.shift()!;
-    const { name, type } = createXMLNode(declarationToken);
-    const declaration: XMLNode = {
-        name,
-        type,
-        value: declarationToken,
-        attributes: getAttributes(declarationToken),
-        children: [],
-    }
-    return [declaration, tokens];
-}
-
-function parseRoot(tokens: string[]): [XMLNode, string[]] {
-    const rootToken: string = tokens.shift()!;
-    const { name, type } = createXMLNode(rootToken);
-    const root: XMLNode = {
-        name,
-        type,
-        value: rootToken,
-        attributes: getAttributes(rootToken),
-        children: [],
-    }
-    return [root, tokens];
-}
-
-function parseChildren(root: XMLNode, tokens: string[]): XMLNode {
-
-    // TODO: Redo with all created as Nodes
-
-    const startIdx = 0;
-
-    if (tokens[startIdx]) {
-        let node = createXMLNode(tokens[startIdx]!);
-
-        let remainingTokens: string[] = [];
-
-        if (node.type === NodeType.ElementOpenTag) {
-            let endIdx = tokens.findIndex(isClosingXMLTag);
-            const children = tokens.slice(startIdx + 1, endIdx);
-            root.children.push({
-                ...node,
-                children: children.map(createXMLNode),
-            });
-            remainingTokens = tokens.slice(endIdx + 1);
-        } else if (node.type === NodeType.ElementCloseTag) {
-            remainingTokens = tokens.slice(1);
-        } else if (node.type === NodeType.ElementSelfClosingTag) {
-            root.children.push(node);
-            remainingTokens = tokens.slice(1);
-        } else if (node.type === NodeType.Text) {
-            root.children.push(node);
-            remainingTokens = tokens.slice(1);
+                break;
+            case NodeType.ElementSelfClosingTag:
+                if (stack.length > 0) {
+                    stack[stack.length - 1].children.push(node)
+                } else {
+                    tree.push(node);
+                }
+            case NodeType.ElementCloseTag:
+                if (stack.length > 0) {
+                    const last = stack.pop();
+                    if (last) {
+                        tree.push(last)
+                    }
+                }
+                break;
         }
 
-        if (remainingTokens.length > 0) {
-            return parseChildren(root, remainingTokens);
+        if (debug) {
+            console.log("=== === === === === === === === === === === === ===")
+            console.log(`Current: ${node.name} (${node.value})`)
+            console.log(`Last in Stack: ${JSON.stringify(stack[stack.length - 1], null, 2)}`)
+            console.log(`Last in Tree: ${JSON.stringify(tree[tree.length - 1], null, 2)}`)
         }
     }
 
-    return root;
+    return tree
 }
 
+export function parse(xml: string, debug: boolean = false): z.infer<typeof XMLDocumentSchema> {
 
-export function parse(xml: string): z.infer<typeof XMLDocumentSchema> {
+    if (!debug) {
+        for (const arg of Bun.argv) {
+            if (arg === "--debug") debug = true;
+        }
+    }
+
     let tokens = tokenizer(xml);
+    let nodes = tokens.map(t => createXMLNode(t));
 
     const tree: Record<string, any> = {
-        declaration: null,
-        root: null,
+        declaration: nodes.shift(),
+        root: nodes.shift(),
     };
 
-    [tree.declaration, tokens] = parseDeclaration(tokens);
-    [tree.root, tokens] = parseRoot(tokens);
-
-    if (tokens.length > 0) {
-        tree.root = parseChildren(tree.root, tokens);
+    if (nodes.length > 0) {
+        tree.root.children = parseChildren(nodes, debug);
     }
 
-    console.log(tree)
+    if (debug) console.log(JSON.stringify(tree, null, 2))
 
     return XMLDocumentSchema.parse(tree);
 }

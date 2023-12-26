@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Ciaran's Thinking and Learning Blog</title>
+        <link>https://www.ciaran.co.za/</link>
+        <description>A place for me to sporadically document.</description>
+        <lastBuildDate>Mon, 31 Jul 2023 13:12:25 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <copyright>GPL</copyright>
+        <item>
+            <title><![CDATA[Tailwind is Bad (If you don't know how to use it)]]></title>
+            <link>https://ciaran.co.za/read/tailwind-is-bad</link>
+            <guid>https://ciaran.co.za/read/tailwind-is-bad</guid>
+            <pubDate>Mon, 10 Jul 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[Recent TailwindCSS drama is a great example of how a fundamental misunderstanding of tools you're using can make them seem better or worse at doing the job they're advertised to do.]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Finding Jobs on Twitter using the OpenAI Embeddings API]]></title>
+            <link>https://ciaran.co.za/read/finding-jobs-with-openai-embeddings</link>
+            <guid>https://ciaran.co.za/read/finding-jobs-with-openai-embeddings</guid>
+            <pubDate>Fri, 17 Feb 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[In an attempt to better understand embeddings and save time trawling through job boards, I tried my hand at writing a notebook that would scrape job listings, and use the OpenAI Embeddings API to help me find the jobs I'd be interested in.]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Reading Articles Later, without Paywalls]]></title>
+            <link>https://ciaran.co.za/read/reading-articles-later-without-paywalls</link>
+            <guid>https://ciaran.co.za/read/reading-articles-later-without-paywalls</guid>
+            <pubDate>Sun, 05 Feb 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[In an effort to 'keep up to date' and 'read every day', I've spend the last few years hopping from tool to service to try and find an intuitive way to organize articles I'm saving to read later.]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Ethereum Eco-System for Web Developers: Smart Contracts, Tokens & Tools]]></title>
+            <link>https://ciaran.co.za/read/smart-contracts-101-for-web-developers</link>
+            <guid>https://ciaran.co.za/read/smart-contracts-101-for-web-developers</guid>
+            <pubDate>Thu, 16 Sep 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[I had some time off work this week, and I had planned on spending some time researching all things Ethereum. So, I thought I would compile all my notes into this article, for other web developers to use as a guide to the Ethereum Ecosystem.]]></description>
+        </item>
+    </channel>
+</rss>

@@ -6,12 +6,14 @@
     "dev": "bun run parse.ts"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.6",
     "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "jsdom": "^23.0.1",
     "zod": "^3.22.4"
   }
 }
