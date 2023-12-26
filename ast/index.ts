@@ -61,11 +61,12 @@ function createChildren(nodes: XMLNode[]): XMLNode[] {
 
 function newTree(nodes: XMLNode[]): [XMLDocument, XMLNode[]] {
     const first = nodes.shift()!;
-
     if (first.type !== NodeType.Declaration) {
         return [XMLDocumentSchema.parse({
-            declaration: XMLNodeSchema.parse(createXMLNode('<?xml version="1.0" encoding="UTF-8" />')),
-            root: first,
+            root: { 
+                ...first,
+                children: createChildren(nodes),
+            },
         }), nodes];
     }
 
@@ -84,8 +85,6 @@ export function createTree(xml: string): XMLDocument {
     const tokens = createTokensFromString(xml);
     let nodes = createXMLNodesFromTokens(tokens);
     let tree: any = {};
-
     [tree, nodes] = newTree(nodes);
-
     return XMLDocumentSchema.parse(tree);
 }

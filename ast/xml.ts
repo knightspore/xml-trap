@@ -20,7 +20,7 @@ export const XMLNodeSchema: z.ZodType<Children> = BaseXMLNodeSchema.extend({
 
 export type XMLDocument = z.infer<typeof XMLDocumentSchema>;
 export const XMLDocumentSchema = z.object({
-    declaration: XMLNodeSchema,
+    declaration: XMLNodeSchema.optional(),
     root: XMLNodeSchema
 })
 

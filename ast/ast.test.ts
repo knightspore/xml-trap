@@ -10,37 +10,37 @@ export const RSSSample = async (): Promise<string> => {
     return await Bun.file(path.join(import.meta.dir + "/../test/samples/rss.xml")).text()
 }
 
-describe("createTree (simple sample)", async () => {
+describe("createTree() mock", async () => {
 
     const simpleSample = await XMLSample();
     const tree = createTree(simpleSample);
 
-    it("initalizes with text from file", () => {
+    it("parses", () => {
         expect(tree).toBeDefined();
     })
 
-    it("parses declaration element", () => {
-        expect(tree.declaration.name).toEqual("?xml")
+    it("declaration element", () => {
+        expect(tree.declaration?.name).toEqual("?xml")
     })
 
-    it("parses root element", () => {
+    it("root element", () => {
         expect(tree.root.name).toEqual("feed")
     })
 
     const children = tree.root.children;
 
-    it("parses root element children", () => {
+    it("top-level children", () => {
         expect(children.length).toBeGreaterThan(0);
     })
 
-    it("has title element with children", () => {
+    it("title", () => {
         const title = children[0];
         expect(title.name).toEqual("title");
         expect(title.children.length).toBeGreaterThan(0);
         expect(title.children[0].value).toEqual("Example Feed");
     })
 
-    it("parses nested elements", () => {
+    it("simple nesting", () => {
         const author = children[3];
         expect(author.name).toEqual("author");
 
@@ -50,7 +50,7 @@ describe("createTree (simple sample)", async () => {
     })
 
 
-    it("parses multiple nested elements", () => {
+    it("complex nesting", () => {
         const entry = children[5];
         expect(entry.name).toEqual("entry");
         expect(entry.children.length).toEqual(5);
@@ -65,48 +65,48 @@ describe("createTree (simple sample)", async () => {
     })
 })
 
-describe("createTree (complex sample)", async () => {
+describe("createTree() ciaran.co.za", async () => {
     const rssSample = await RSSSample();
     const tree = createTree(rssSample);
 
-    it("initalizes with text from file", () => {
+    it("initializes", () => {
         expect(tree).toBeDefined();
     })
 
-    it("parses declaration element", () => {
-        expect(tree.declaration.name).toEqual("?xml")
+    it("declaration element", () => {
+        expect(tree.declaration?.name).toEqual("?xml")
     })
 
-    it("parses root element", () => {
+    it("root element", () => {
         expect(tree.root.name).toEqual("rss")
     })
 
     const children = tree.root.children;
 
-    it("parses root element children", () => {
+    it("top-level children", () => {
         expect(children.length).toBeGreaterThan(0);
     })
 
     const channel = children[0];
 
-    it("parses channel element", () => {
+    it("channel element", () => {
         expect(channel.name).toEqual("channel");
     })
 
     const channelChildren = channel.children;
 
-    it("parses channel element children", () => {
+    it("channel children", () => {
         expect(channelChildren.length).toBeGreaterThan(0);
     })
 
-    it("parses nested elements", () => {
+    it("nested items", () => {
         const title = channelChildren[0];
         expect(title.name).toEqual("title");
         expect(title.children.length).toEqual(1);
         expect(title.children[0].value).toEqual("Ciaran's Thinking and Learning Blog");
     })
 
-    it("parses items", () => {
+    it("feed items", () => {
         expect(channel.children.filter(c => c.name === "item").length).toEqual(4);
     })
 })
@@ -120,12 +120,11 @@ export const URLS = [
     "https://news.ycombinator.com/rss",
 ]
 
-describe("createTree (major examples)", async () => {
-
-
-    for (const url of URLS) {
-        const sample = await fetch(url).then(r => r.text());
-        it(`parses feed from '${url}'`, async () => {
+describe("createTree()", async () => {
+    for (const href of URLS) {
+        const url = new URL(href);
+        const sample = await fetch(url.href).then(r => r.text());
+        it(url.host, async () => {
             const result = createTree(sample);
             expect(result).toBeDefined();
         })
