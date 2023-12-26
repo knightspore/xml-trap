@@ -1,12 +1,13 @@
 import { describe, expect, it } from "bun:test"
-import { createTree } from "./ast";
+import { createTree } from ".";
+import path from "path";
 
 export const XMLSample = async (): Promise<string> => {
-    return await Bun.file("./samples/sample.xml").text()
+    return await Bun.file(path.join(import.meta.dir + "/../test/samples/sample.xml")).text()
 }
 
-export const RSSSample = async(): Promise<string> => {
-    return await Bun.file("./samples/rss.xml").text()
+export const RSSSample = async (): Promise<string> => {
+    return await Bun.file(path.join(import.meta.dir + "/../test/samples/rss.xml")).text()
 }
 
 describe("createTree (simple sample)", async () => {
@@ -110,16 +111,17 @@ describe("createTree (complex sample)", async () => {
     })
 })
 
+export const URLS = [
+    "http://techcrunch.com/feed/",
+    "https://www.wired.com/feed/category/backchannel/latest/rss",
+    "https://feeds.arstechnica.com/arstechnica/technology-lab",
+    "https://www.protocol.com/feeds/feed.rss",
+    "https://overreacted.io/rss.xml",
+    "https://news.ycombinator.com/rss",
+]
+
 describe("createTree (major examples)", async () => {
 
-    const URLS = [
-        "http://techcrunch.com/feed/",
-        "https://www.wired.com/feed/category/backchannel/latest/rss",
-        "https://feeds.arstechnica.com/arstechnica/technology-lab",
-        "https://www.protocol.com/feeds/feed.rss",
-        "https://overreacted.io/rss.xml",
-        "https://news.ycombinator.com/rss",
-    ]
 
     for (const url of URLS) {
         const sample = await fetch(url).then(r => r.text());

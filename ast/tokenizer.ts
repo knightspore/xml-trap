@@ -1,4 +1,4 @@
-import { isCharClosingTag, isCharNewLine, isNotEmpty, isCharOpeningTag, isCharTab, isCharText, isCharWhitespace } from "./match";
+import { isCharClosingTag, isCharNewLine, isNotEmpty, isCharOpeningTag, isCharTab, isCharText, isCharWhitespace, isCharTrimmable } from "./match";
 
 type TokenizerState = {
     source: string,
@@ -7,7 +7,7 @@ type TokenizerState = {
     token: string,
 }
 
-function trimLeft(source: string, cursor: number): number {
+export function trimLeft(source: string, cursor: number): number {
     let char = source[cursor];
     if (isCharWhitespace(char) || isCharNewLine(char) || isCharTab(char)) {
         cursor++;
@@ -16,13 +16,13 @@ function trimLeft(source: string, cursor: number): number {
     return cursor;
 }
 
-function chopChar(source: string, cursor: number): [string, number] {
+export function chopChar(source: string, cursor: number): [string, number] {
     let char = source[cursor];
     cursor++;
     return [char, cursor];
 }
 
-function nextToken(source: string, cursor: number): [string, number] {
+export function nextToken(source: string, cursor: number): [string, number] {
     cursor = trimLeft(source, cursor);
 
     let char = source[cursor];

@@ -1,7 +1,5 @@
-import { z } from "zod";
 import { NodeType, XMLDocument, XMLDocumentSchema, XMLNode, XMLNodeSchema, createXMLNode, createXMLNodesFromTokens } from "./xml";
 import { createTokensFromString } from "./tokenizer";
-import chalk from "chalk";
 
 function findOpenTag(nodes: XMLNode[]) {
     const start = nodes.findIndex(n => n.type === NodeType.ElementOpenTag || n.type === NodeType.ElementSelfClosingTag);
@@ -61,15 +59,33 @@ function createChildren(nodes: XMLNode[]): XMLNode[] {
     return XMLNodeSchema.array().parse(children);
 }
 
-export function createTree(xml: string, debug: boolean = Bun.argv.join(" ").includes("--debug")): XMLDocument {
-    const tokens = createTokensFromString(xml);
-    const nodes = createXMLNodesFromTokens(tokens);
+function newTree(nodes: XMLNode[]): [XMLDocument, XMLNode[]] {
+    const first = nodes.shift()!;
+
+    if (first.type !== NodeType.Declaration) {
+        return [XMLDocumentSchema.parse({
+            declaration: XMLNodeSchema.parse(createXMLNode('<?xml version="1.0" encoding="UTF-8" />')),
+            root: first,
+        }), nodes];
+    }
+
     const tree: XMLDocument = {
-        declaration: nodes.shift()!,
+        declaration: first,
         root: {
             ...nodes.shift()!,
-            children: createChildren(nodes)
-        }
+            children: createChildren(nodes),
+        },
     }
+
+    return [XMLDocumentSchema.parse(tree), nodes]
+}
+
+export function createTree(xml: string): XMLDocument {
+    const tokens = createTokensFromString(xml);
+    let nodes = createXMLNodesFromTokens(tokens);
+    let tree: any = {};
+
+    [tree, nodes] = newTree(nodes);
+
     return XMLDocumentSchema.parse(tree);
 }

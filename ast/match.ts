@@ -18,6 +18,10 @@ export function isCharTab(char: string): boolean {
     return match(/\t/, char);
 }
 
+export function isCharTrimmable(char: string): boolean {
+    return match(/\s|\n|\t/, char);
+}
+
 export function isCharOpeningTag(char: string): boolean {
     return match(/</, char);
 }

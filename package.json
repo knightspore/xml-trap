@@ -2,9 +2,6 @@
   "name": "xml-parser",
   "module": "index.ts",
   "type": "module",
-  "scripts": {
-    "dev": "bun run parse.ts"
-  },
   "devDependencies": {
     "@types/jsdom": "^21.1.6",
     "bun-types": "latest"
@@ -13,6 +10,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "mitata": "^0.1.6",
+    "path": "^0.12.7",
     "zod": "^3.22.4"
   }
 }
