@@ -1,3 +1,2 @@
-import { createTree } from "./ast";
-import { newFeed } from "./feed";
-export { createTree, newFeed }
+export { createTree } from "./ast";
+export { newFeed } from "./feed";

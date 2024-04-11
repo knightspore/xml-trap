@@ -1,9 +1,16 @@
 {
   "name": "xml-trap",
+  "description": "A Typescript XML, RSS and Atom parser",
   "module": "src/index.ts",
+  "main": "out/index.js",
+  "types": "out/index.d.ts",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "bun build ./index.ts --outdir ./out --target node --sourcemap=external --minify",
+    "prebuild": "rm -rf out/*",
+    "build": "bun build --target=node ./src/index.ts --outdir=./out && bun run build:declaration",
+    "build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "postbuild": "rm tsconfig.types.tsbuildinfo",
     "test": "bun test --watch --coverage",
     "example": "bun run example.ts",
     "bench": "bun run test/bench.ts"
@@ -15,6 +22,16 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/knightspore/xml-trap.git"
+  },
+  "author": "Ciarán Slemon",
+  "license":   "MIT", 
+  "files": [
+      "out/*.js",
+      "out/*.d.ts"
+  ],
   "dependencies": {
     "chalk": "^5.3.0",
     "mitata": "^0.1.6",

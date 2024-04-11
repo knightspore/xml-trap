@@ -34,7 +34,7 @@ describe("feed (rss/atom)", async () => {
 
 })
 
-export const URLS = [
+const URLS = [
     "http://techcrunch.com/feed/",
     "https://www.wired.com/feed/category/backchannel/latest/rss",
     "https://feeds.arstechnica.com/arstechnica/technology-lab",

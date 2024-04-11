@@ -2,11 +2,11 @@ import { describe, expect, it } from "bun:test"
 import { createTree } from ".";
 import path from "path";
 
-export const XMLSample = async (): Promise<string> => {
+const XMLSample = async (): Promise<string> => {
     return await Bun.file(path.join(import.meta.dir + "/../test/samples/sample.xml")).text()
 }
 
-export const RSSSample = async (): Promise<string> => {
+const RSSSample = async (): Promise<string> => {
     return await Bun.file(path.join(import.meta.dir + "/../test/samples/rss.xml")).text()
 }
 
@@ -111,7 +111,7 @@ describe("createTree() ciaran.co.za", async () => {
     })
 })
 
-export const URLS = [
+const URLS = [
     "http://techcrunch.com/feed/",
     "https://www.wired.com/feed/category/backchannel/latest/rss",
     "https://feeds.arstechnica.com/arstechnica/technology-lab",
