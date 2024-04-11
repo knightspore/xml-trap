@@ -1,18 +1,16 @@
 # XML T.R.A.P. - a Typescript RSS/Atom Feed Parser written in Bun
 
-This is a simple RSS/Atom feed parser written in Typescript, using Bun. It can parse feeds and create an AST of the feed in JSON.
+This is a simple RSS/Atom feed parser written in Typescript, using Bun. It can parse feeds and create an AST of the feed in JSON. 
+
+## Quickstart
 
 ```bash
 npm install xml-trap 
 ```
 
-## Setup
-
-<!-- TODO -->
-
 ## Usage
 
-<!-- TODO -->
+You can either use the `newFeed` function to parse a feed, or the `createTree` function to create an AST of the feed.
 
 ### Feeds
 
@@ -75,6 +73,28 @@ bun run test/bench.ts # run the benchmarks
 ## Contributing
 
 This project is open to contributions. As you see above, the project is well-covered with tests. If you want to contribute, it would probably be best to either add a URL to the feed tests, or in the case of the AST modules, adding a new XML document and referencing the benchmarks would be a good place to start.
+
+All contributions should have a test, and should pass or improve the existing suite. Don't worry too much about benchmarks, but if you have a contribution that makes the code faster, you're welcome to add a benchmark to show the improvement.
+
+### Setup
+
+To get started, follow these steps:
+
+```bash
+# Clone the repo
+gh repo clone knightspore/xml-trap
+cd xml-trap 
+
+# Install dependencies
+bun install
+
+# Run the example and start exploring
+bun run example.ts
+
+# Once you're done, build the project
+bun run build
+# And submit a PR with your changes
+```
 
 ## License
 
