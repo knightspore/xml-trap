@@ -1,5 +1,5 @@
 {
-  "name": "xml-parser",
+  "name": "xml-trap",
   "module": "index.ts",
   "type": "module",
   "scripts": {

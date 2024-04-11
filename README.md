@@ -1,6 +1,10 @@
-# Typescript RSS/Atom Feed Parser
+# XML T.R.A.P. - a Typescript RSS/Atom Feed Parser written in Bun
 
 This is a simple RSS/Atom feed parser written in Typescript, using Bun. It can parse feeds and create an AST of the feed in JSON.
+
+```bash
+npm install xml-trap 
+```
 
 ## Setup
 
@@ -15,7 +19,7 @@ This is a simple RSS/Atom feed parser written in Typescript, using Bun. It can p
 To parse an RSS Feed, use the `newFeed` function.
 
 ```typescript
-import { newFeed } from "rss-atom-feed-parser";
+import { newFeed } from "xml-trap";
 
 const feed = newFeed("https://example.com/feed.xml");
 console.log(feed.title) // The title of the feed
@@ -39,7 +43,7 @@ The `Feed` type has a number of fields that can be accessed:
 To create a tree-representation of the feed, use the `createTree` function.
 
 ```typescript
-import { createTree } from "rss-atom-feed-parser";
+import { createTree } from "xml-trap";
 
 const tree = createTree("https://example.com/feed.xml");
 console.log(tree.root) // The root of the tree
