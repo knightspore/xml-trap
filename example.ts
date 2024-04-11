@@ -1,4 +1,4 @@
-import { newFeed } from "./feed";
+import { newFeed } from "./src/feed";
 
 const feed = await newFeed("https://ciaran.co.za/rss.xml");
 

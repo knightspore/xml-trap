@@ -1,7 +1,7 @@
 import { bench, group, run } from "mitata";
 import path from "path";
-import { chopChar, createTokensFromString, nextToken, trimLeft } from "../ast/tokenizer";
-import { createXMLNode, createXMLNodesFromTokens } from "../ast/xml";
+import { chopChar, createTokensFromString, nextToken, trimLeft } from "../src/ast/tokenizer";
+import { createXMLNode, createXMLNodesFromTokens } from "../src/ast/xml";
 
 const simple = await Bun.file(path.join(import.meta.dir + "/samples/sample.xml")).text()
 const ciarancoza = await Bun.file(path.join(import.meta.dir + "/samples/rss.xml")).text()

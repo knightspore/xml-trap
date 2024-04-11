@@ -1,8 +1,9 @@
 {
   "name": "xml-trap",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "scripts": {
+    "build": "bun build ./index.ts --outdir ./out --target node --sourcemap=external --minify",
     "test": "bun test --watch --coverage",
     "example": "bun run example.ts",
     "bench": "bun run test/bench.ts"
