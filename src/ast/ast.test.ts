@@ -3,11 +3,11 @@ import { createTree } from ".";
 import path from "path";
 
 const XMLSample = async (): Promise<string> => {
-    return await Bun.file(path.join(import.meta.dir + "/../test/samples/sample.xml")).text()
+    return await Bun.file(path.join(import.meta.dir + "/../../test/samples/sample.xml")).text()
 }
 
 const RSSSample = async (): Promise<string> => {
-    return await Bun.file(path.join(import.meta.dir + "/../test/samples/rss.xml")).text()
+    return await Bun.file(path.join(import.meta.dir + "/../../test/samples/rss.xml")).text()
 }
 
 describe("createTree() mock", async () => {

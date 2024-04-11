@@ -1,3 +1,5 @@
+![Test Status](https://img.shields.io/github/actions/workflow/status/knightspore/xml-trap/ci-bun-test.yml) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/xml-trap) ![NPM Type Definitions](https://img.shields.io/npm/types/xml-trap)
+
 # XML T.R.A.P. - a Typescript RSS/Atom Feed Parser written in Bun
 
 This is a simple RSS/Atom feed parser written in Typescript, using Bun. It can parse feeds and create an AST of the feed in JSON. 
