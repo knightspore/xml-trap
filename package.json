@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "bun test --watch --coverage",
-    "example": "bun run example.ts > example.json && nvim example.json"
+    "example": "bun run example.ts"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.6",
