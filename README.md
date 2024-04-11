@@ -19,7 +19,7 @@ To parse an RSS Feed, use the `newFeed` function.
 ```typescript
 import { newFeed } from "xml-trap";
 
-const feed = newFeed("https://example.com/feed.xml");
+const feed = await newFeed("https://example.com/feed.xml");
 console.log(feed.title) // The title of the feed
 ```
 
