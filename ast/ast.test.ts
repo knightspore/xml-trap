@@ -115,7 +115,7 @@ export const URLS = [
     "http://techcrunch.com/feed/",
     "https://www.wired.com/feed/category/backchannel/latest/rss",
     "https://feeds.arstechnica.com/arstechnica/technology-lab",
-    "https://www.protocol.com/feeds/feed.rss",
+    "https://www.404media.co/rss/",
     "https://overreacted.io/rss.xml",
     "https://news.ycombinator.com/rss",
 ]
