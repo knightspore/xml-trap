@@ -1,20 +1,19 @@
 import { z } from "zod";
-import { createTree } from "./ast";
-import { XMLDocument, XMLNode, XMLNodeSchema } from "./ast/xml";
+import { createTree } from "../ast";
+import { XMLDocument, XMLNode, XMLNodeSchema } from "../ast/xml";
 
 export enum FeedType {
     RSS = "RSS",
     Atom = "Atom",
     None = "None",
 }
-export const FeedTypeSchema = z.nativeEnum(FeedType);
 
-export async function loadSource(url: string): Promise<string> {
+async function loadSource(url: string): Promise<string> {
     const text = await fetch(url).then(r => r.text());
     return text.trim().replaceAll(/(\s*)([\\]n)(\s*)/g, "").trim();
 }
 
-export function determineFeedType(root: XMLDocument['root']): FeedType {
+function determineFeedType(root: XMLDocument['root']): FeedType {
     if (root.name === "rss") {
         return FeedType.RSS;
     } else if (root.name === "feed") {
@@ -23,7 +22,7 @@ export function determineFeedType(root: XMLDocument['root']): FeedType {
     return FeedType.None;
 }
 
-export function getElementValue(node: XMLNode, name: string): string {
+function getElementValue(node: XMLNode, name: string): string {
     if (node.name === name && node.children && node.children.length === 1) {
         return node.children[0].value;
     } else if (node.children) {
@@ -48,7 +47,7 @@ const FeedItemSchema = XMLNodeSchema.transform(node => {
     }
 })
 
-export function getFeedItems(root: XMLNode): FeedItem[] {
+function getFeedItems(root: XMLNode): FeedItem[] {
     switch (determineFeedType(root)) {
         case FeedType.RSS:
             return root.children[0].children.filter(c => c.name === "item").map(v => FeedItemSchema.parse(v));

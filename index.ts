@@ -1,2 +1,3 @@
 import { createTree } from "./ast";
-export { createTree as parse }
+import { newFeed } from "./feed";
+export { createTree, newFeed }

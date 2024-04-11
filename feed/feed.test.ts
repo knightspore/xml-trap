@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { FeedType, newFeed } from "../feed";
+import { FeedType, newFeed } from ".";
 
 describe("feed (rss/atom)", async () => {
 

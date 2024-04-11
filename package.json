@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "bun test --watch --coverage",
-    "example": "bun run example.ts"
+    "example": "bun run example.ts",
+    "bench": "bun run test/bench.ts"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.6",
