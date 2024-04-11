@@ -79,3 +79,9 @@ This project is open to contributions. As you see above, the project is well-cov
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/knightspore/xml-trap/blob/main/LICENSE.md) file for more information.
+
+## Shoutouts
+- [Bun](https://github.com/oven-sh/bun) for great JS tooling. 
+- [Tsoding for this video about writing a C compiler in PHP](https://www.youtube.com/watch?v=Yi6NxMxCFY8&pp=ygUOYyBjb21waWxlciBwaHA%3D) which was my original inspiration to explore parsing. 
+- [Matthew Groff's notes](https://groff.dev/blog/function-agents) on publishing an NPM package built with Bun.
+
