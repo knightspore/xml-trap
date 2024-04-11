@@ -47,7 +47,12 @@ const tree = createTree("https://example.com/feed.xml");
 console.log(tree.root) // The root of the tree
 ```
 
-The `Tree` type has two main fields: `declaration` (the XML declaration node), and `root` (the root node of the tree). All children are, of course, on the root node.
+The `Tree` type has two main fields: 
+
+| Field | Description |
+| --- | --- |
+| `declaration` | The XML declaration node |
+| `root` | The root node of the tree (and all children) |
 
 The `XMLNode` type represents nodes on the tree, with fields:
 
