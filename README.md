@@ -29,14 +29,14 @@ The `Feed` type has a number of fields that can be accessed:
 
 | Field | Description |
 | --- | --- |
-| url | The URL of the feed |
-| title | The title of the feed |
-| description | The description of the feed |
-| language | The language of the feed |
-| update | The last build date of the feed (or the updated date) |
-| items | An array of items in the feed |
-| tree | An AST of the feed in JSON |
-| source | A minified copy of the source XML |
+| `url` | The URL of the feed |
+| `title` | The title of the feed |
+| `description` | The description of the feed |
+| `language` | The language of the feed |
+| `update` | The last build date of the feed (or the updated date) |
+| `items` | An array of items in the feed |
+| `tree` | An AST of the feed in JSON |
+| `source` | A minified copy of the source XML |
 
 ### AST
 
@@ -55,11 +55,11 @@ The `XMLNode` type represents nodes on the tree, with fields:
 
 | Field | Description |
 | --- | --- |
-| name | The name of the node eg. `div`, or the node text |
-| type | The type of the node (eg. Declaration, Opening, Self-closing, etc.) |
-| attributes | An object of attributes on the node |
-| value | The value of the node (eg. the text of a text node) |
-| children | An array of children of the node |
+| `name` | The name of the node eg. `div`, or the node text |
+| `type` | The type of the node (eg. Declaration, Opening, Self-closing, etc.) |
+| `attributes` | An object of attributes on the node |
+| `value` | The value of the node (eg. the text of a text node) |
+| `children` | An array of children of the node |
 
 This tree is used to construct feeds, and of course can be re-used as you wish for handling other XML documents.
 
@@ -78,4 +78,4 @@ This project is open to contributions. As you see above, the project is well-cov
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/knightspore/xml-trap/blob/main/LICENSE.md) file for more information.
